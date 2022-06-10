@@ -46,10 +46,10 @@ const PokePage: NextPage<Props> = ({ poke }) => {
             >
               {poke.name}
             </Text>
-            <Text css={{ fontWeight: "bold" }}>Tamaño:</Text>
+            <Text css={{ fontWeight: "bold" }}>Weight:</Text>
             <div style={{ marginLeft: "20px" }}>{poke.weight}</div>
 
-            <Text css={{ fontWeight: "bold" }}>Habilidades:</Text>
+            <Text css={{ fontWeight: "bold" }}>Abilities:</Text>
             <div style={{ marginLeft: "20px" }}>
               {poke.abilities.map((h, idx) => (
                 <Text
@@ -114,11 +114,17 @@ export const getStaticPaths: GetStaticPaths = async (context) => {
     .fill(null)
     .map((el, idx) => ({ params: { id: `${idx + 1}` } }));
 
-  return { paths, fallback: false };
+  return { paths, fallback: "blocking" /*fallback: false*/ }; // blocking para que nos deje pasar y podamamos hacer INCREMENTAL STATIC GENERATION
 };
+
+// el parametro revalidate lo que hace es el INCREMENTAL STATIC REGENERATION. resibe los segundos despues de los cuales next hara generacion de estaticos
 
 export const getStaticProps: GetStaticProps = async ({ params }) => {
   const { id } = params as { id: string };
-  const poke = await ax.get<PokeFull>(`/pokemon/${id}`);
-  return { props: { poke: poke.data } };
+  try {
+    const poke = await ax.get<PokeFull>(`/pokemon/${id}`);
+    return { props: { poke: poke.data }, revalidate: 86400 };
+  } catch {
+    return { redirect: { destination: "/", permanent: false } };
+  }
 };

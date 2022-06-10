@@ -46,10 +46,10 @@ const PokeByName: NextPage<Props> = ({ poke }) => {
             >
               {poke.name}
             </Text>
-            <Text css={{ fontWeight: "bold" }}>Tamaño:</Text>
+            <Text css={{ fontWeight: "bold" }}>Weight:</Text>
             <div style={{ marginLeft: "20px" }}>{poke.weight}</div>
 
-            <Text css={{ fontWeight: "bold" }}>Habilidades:</Text>
+            <Text css={{ fontWeight: "bold" }}>Abilities:</Text>
             <div style={{ marginLeft: "20px" }}>
               {poke.abilities.map((h, idx) => (
                 <Text
